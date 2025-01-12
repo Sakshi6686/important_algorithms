@@ -1,0 +1,60 @@
+struct Manacher {
+    vector<int> p; // Stores lengths of palindromes centered at each index in the transformed string
+
+    void build(const string& s) {
+        string t = "@";
+        for (char v : s) {
+            t += "#";
+            t += v;
+        }
+        t += "#$";
+        run_manacher(t);
+    }
+
+    void run_manacher(const string& s) {
+        int n = s.size();
+        p.assign(n, 0);
+        int c = 0, r = 0; // Current center and right boundary
+
+        for (int i = 1; i < n - 1; ++i) {
+            int iMirror = 2 * c - i;
+
+            if (i < r) p[i] = min(r - i, p[iMirror]);
+
+            while (s[i + 1 + p[i]] == s[i - 1 - p[i]]) ++p[i];
+
+            if (i + p[i] > r) {
+                c = i;
+                r = i + p[i];
+            }
+        }
+    }
+
+    pair<int, int> getLps() {
+        int maxLen = 0, cenIdx = 0;
+
+        for (int i = 1; i < p.size() - 1; ++i) {
+            if (p[i] > maxLen) {
+                maxLen = p[i];
+                cenIdx = i;
+            }
+        }
+
+        int st = (cenIdx - maxLen) / 2;
+        return {st, maxLen};
+    }
+
+    int getLongest(int cen, bool odd) {
+        // Get corresponding position in transformed string
+        int pos = 2 * cen + 1 + (!odd);
+        return p[pos] - 1;
+    }
+
+    bool checkPalindrome(int l, int r) {
+        // Length of the substring (zero-based indices, inclusive)
+        int len = r - l + 1;
+        // Check if the length is within the max palindromic radius around the center
+        int cen = (l + r) / 2;
+        return len <= getLongest(cen, (l + r) % 2 == 0);
+    }
+};
