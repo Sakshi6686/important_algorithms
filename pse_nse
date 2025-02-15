@@ -1,4 +1,4 @@
-  vector<int> pse(n);
+   vector<int> pse(n);
 
         stack<int>st;
 
@@ -6,7 +6,7 @@
 
             while(!st.empty() && arr[st.top()]>=arr[i]) st.pop();
 
-            if(st.empty) pse[i]=-1;
+            if(st.empty()) pse[i]=-1;
             else pse[i]=st.top();
             st.push(i);
         }
@@ -19,9 +19,10 @@ while(!st.empty()) st.pop();
 
             while(!st.empty() && arr[st.top()]>=arr[i]) st.pop();
 
-            if(st.empty) nse[i]=n;
-            else pse[i]=st.top();
+            if(st.empty()) nse[i]=n;
+            else nse[i]=st.top();
             st.push(i);
         }
+
 
 
