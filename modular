@@ -1,0 +1,41 @@
+
+        int prod(int a,int b){
+            a=a%mod;
+            b=b%mod;
+            return a*b%mod;
+        }
+        
+         int find_pow(int base,int e){
+            
+            base=base%mod;
+            int res=1;
+            while(e>0){
+                if(e&1)res=prod(res,base);
+                base=prod(base,base);
+                e>>=1;
+            }
+            
+            return res;
+        }
+        int sum(int a,int b){
+             a=a%mod;
+            b=b%mod;
+            
+            return (a+b) %mod;
+        }
+        
+        int sub(int a,int b){
+              a=a%mod;
+            b=b%mod;
+            int ans=a-b;
+            if(ans<0) ans+=mod;
+            return ans%mod;
+            
+        }
+        
+        int divi(int a,int b ){
+                          a=a%mod;
+            b= find_pow(b,mod-2);
+            
+            return prod(a,b);
+        }
