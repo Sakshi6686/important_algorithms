@@ -1,0 +1,106 @@
+struct node{
+            int sum;
+            int max;
+            bool isLazy;
+            int lazyVal;
+            node(){
+                sum=0;
+                max=0;
+                isLazy=false;
+                lazyVal=0;
+            }
+         };
+    struct segmentTrees{
+           
+         node t[4*100004];
+             
+          int n;
+    vector<int>& arr;
+
+   
+    segmentTrees(int N, vector<int>& a) : n(N), arr(a) {}
+
+            node merge(node a,node b){
+                node ans;
+
+                ans.sum=a.sum+b.sum;
+                ans.max=max(a.max,b.max);
+                return ans;
+            }
+        void push(int idx,int l,int r){
+            if(t[idx].isLazy){
+                    t[idx].sum+=  t[idx].lazyVal*(r-l+1);
+                t[idx].max += t[idx].lazyVal;
+
+                    if(l!=r){
+                        int mid=l+(r-l)/2;
+                        t[2*idx].lazyVal=t[idx].lazyVal;
+                        t[2*idx].isLazy=1;
+                        t[2*idx+1].lazyVal=t[idx].lazyVal;
+                        t[2*idx+1].isLazy=1;
+                    }
+                    t[idx].lazyVal=0;
+                    t[idx].isLazy=0;
+            }
+        }
+
+            void build(int idx,int l,int r){
+                if(l==r){
+                    t[idx].sum+=arr[l];
+                    t[idx].max=max(t[idx].max,arr[l]);
+                    return ;
+                }
+
+                int mid=l+(r-l)/2;
+
+                build(2*idx,l,mid);
+                build(2*idx+1,mid+1,r);
+                t[idx]=merge(t[2*idx],t[2*idx+1]);
+            }
+
+
+            void updateRange(int idx,int l,int r,int lq,int rq,int val){
+
+                push(idx,l,r);
+                if(r<lq || l>rq) return ;
+                 if(lq<=l && r<=rq) {
+                    t[idx].lazyVal+=val;
+                    t[idx].isLazy=1;
+                    push(idx,l,r);
+                    return ;
+                 }
+
+                if(l==r){
+                  arr[l]+=val;
+                    t[idx].sum=arr[l];
+              
+                    t[idx].max=arr[l];
+                   
+
+                    return ;
+                }
+
+                 int mid=l+(r-l)/2;
+
+             updateRange(2*idx,l,mid,lq,rq,val);
+          updateRange(2*idx+1,mid+1,r,lq,rq,val);
+
+              t[idx]= merge(t[2*idx],t[2*idx+1]);
+            }
+
+
+            node query(int idx,int l,int r,int lq, int rq){
+                push(idx,l,r);
+                if(r<lq  || l>rq) return node();
+                if(lq<=l && r<=rq) return t[idx];
+
+                 int mid=l+(r-l)/2;
+               
+                        
+                 return merge(query(2*idx,l,mid,lq,rq),query(2*idx+1,mid+1,r,lq,rq));      
+            }
+
+
+
+
+    };
