@@ -1,0 +1,70 @@
+
+class Node{
+
+public:
+    Node* child[26];
+ ll cnt;
+     Node(){
+        for(int i=0;i<26;i++) child[i]=NULL;
+cnt=0;
+     }
+
+      bool containsKey(char ch){
+        return child[ch-'a']!=NULL;
+      }
+
+      void insertChild(char ch){
+         child[ch-'a']=new Node();
+      }
+
+      void incCnt(){
+        cnt++;
+      }
+
+      Node* getChild(char ch){
+        return child[ch-'a'];
+      }
+
+      ll getCnt(){
+        return cnt;
+      }
+};
+
+class Trie{
+public:
+    Node* root=new Node();
+
+
+    void insert(string s){
+            Node* node =root;
+           
+            for(auto & ch :s){
+                if(!node->containsKey(ch))node->insertChild(ch);
+                
+                node=node->getChild(ch);
+               
+            }
+             node->incCnt();
+
+
+
+    }
+
+ll getCnt(string s){
+                 Node* node =root;
+               
+            for(auto & ch :s){
+                
+                if(!node->containsKey(ch)){
+                   return 0;
+                }
+                 
+                node=node->getChild(ch);
+            }
+
+            return node->getCnt();
+         }
+
+
+
+};
