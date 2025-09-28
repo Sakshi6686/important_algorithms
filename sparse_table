@@ -1,0 +1,37 @@
+
+        int n;
+    vector<vector<int>> sp_max,sp_min;
+    vector<int> log_val;// floor value of log base 2
+    void precompute(vector<int>&nums){
+        int MAX= log2(n)+1 ;
+            sp_max.resize(n,vector<int>(MAX));
+            sp_min.resize(n,vector<int>(MAX));
+log_val.assign(n+1,0);
+for(int i=2;i<=n;i++){
+    log_val[i]=log_val[i/2]+1;
+}
+            for(int i=0;i<n;i++){
+                sp_max[i][0]=nums[i];
+                sp_min[i][0]=nums[i];
+            }
+
+            for(int j=1;j<MAX;j++){
+                for(int i=0;(i+(1<<(j-1)))<n;i++){
+                        sp_max[i][j]=max(sp_max[i][j-1],sp_max[i+(1<<(j-1))][j-1]) ;
+                         sp_min[i][j]=min(sp_min[i][j-1],sp_min[i+(1<<(j-1))][j-1]);
+                }
+            
+        
+    }
+    }
+
+    int query_mx(int l,int r){
+int k=log2(r-l+1);
+//int k=log_val[r-l+1];
+return max(sp_max[l][k],sp_max[r-(1<<k)+1][k]);
+    }
+    int query_mn(int l,int r){
+int k=log2(r-l+1);
+//int k=log_val[r-l+1];
+return min(sp_min[l][k],sp_min[r-(1<<k)+1][k]);
+    }
